@@ -1,4 +1,7 @@
 /Microservices
+├── auth/ 
+|  ├── htpasswd/
+├── data/
 ├── client/
 │   ├── Dockerfile
 │   ├── package.json
@@ -36,3 +39,25 @@
 
 
 
+
+
+k8s/
+│
+
+│
+├── posts-clusterip-srv-deployment.yaml
+├── posts-clusterip-srv-service.yaml
+│
+├── query-srv-deployment.yaml
+├── query-srv-service.yaml
+│
+├── comments-srv-deployment.yaml
+├── comments-srv-service.yaml
+│
+├── moderation-srv-deployment.yaml
+├── moderation-srv-service.yaml
+│
+├── event-bus-srv-deployment.yaml
+├── event-bus-srv-service.yaml
+│
+└── ingress.yaml

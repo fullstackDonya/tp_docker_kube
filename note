@@ -111,34 +111,39 @@ kubectl get svc
 
 
 URL des services accessibles :
-Client : http://localhost:3000
-Comments : http://localhost:4001
-Event Bus : http://localhost:4005
-Moderation : http://localhost:4003
-Posts : http://localhost:4000
-Query : http://localhost:4002
-Registry : http://localhost:5005
+# Client : http://localhost:3000
+# Comments : http://localhost:4001
+# Event Bus : http://localhost:4005
+# Moderation : http://localhost:4003
+# Posts : http://localhost:4000
+# Query : http://localhost:4002
+# Registry : http://localhost:5005
 
 Accéder à l'application front-end :
 Accéder à http://localhost:3000 pour voir l'interface utilisateur.
 
-Vérifier les autres services via leur API :
-http://localhost/posts/create
-http://localhost/posts
-http://localhost/posts/<id>/comments
-http://localhost
 
-Posts Service : http://localhost:4000
-Comments Service : http://localhost:4001
-Query Service : http://localhost:4002
-Moderation Service : http://localhost:4003
-Event Bus Service : http://localhost:4005
+Query Service
+Pour récupérer un post avec ses commentaires associés :
+http://localhost:4002/posts/2
+Vérifier les autres services via leur API :
+Posts Service : http://localhost/posts/create
+http://localhost:4001/posts/2/comments
+Comments Service : http://localhost/posts
+Query Service : http://localhost/posts/2/comments
+Moderation Service :
+Event Bus Service :
+
+curl http://localhost/posts/create
+curl http://localhost/posts
+curl http://localhost/posts/2/comments
+curl http://localhost/
 
 Accéder à l'application front-end (Kubernetes)
 Si  déployé sur Kubernetes,application front-end via l'URL suivante :
-http://192.168.49.2:31637
+http://localhost:32064/
 Ou pour les services spécifiques :
-http://192.168.49.2:31637/posts
+http://localhost:32064/posts
 
 
 supprimer un container:
@@ -149,4 +154,9 @@ docker stop <container_id>
 # kubectl describe pod moderation-srv-bb6c96478-99gvv
 
 kubectl logs client-srv-76445cf66d-br826
+kubectl logs comments-srv-5b574d448f-mh9lz 
 
+kubectl logs event-bus-srv-fd584bf8-wp7df
+kubectl logs posts-clusterip-srv-c5dcf4cd9-r94qs
+kubectl logs query-srv-5b459469db-ftbdz 
+kubectl logs moderation-srv-7b87644c6f-cl4g

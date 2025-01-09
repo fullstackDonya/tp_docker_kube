@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moderation-srv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moderation-srv
+  template:
+    metadata:
+      labels:
+        app: moderation-srv
+    spec:
+      containers:
+      - name: moderation-srv
+        image: micro_service/moderation
+        ports:
+        - containerPort: 4003

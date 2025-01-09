@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comments-srv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: comments-srv
+  template:
+    metadata:
+      labels:
+        app: comments-srv
+    spec:
+      containers:
+      - name: comments-srv
+        image: micro_service/comments
+        ports:
+        - containerPort: 4001

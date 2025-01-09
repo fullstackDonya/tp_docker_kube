@@ -12,8 +12,11 @@ spec:
       labels:
         app: query-srv
     spec:
+      imagePullSecrets:
+        - name: regcred  
       containers:
       - name: query-srv
-        image: micro_service/query
+        image: localhost:5005/micro_service/query
+        imagePullPolicy: Always
         ports:
         - containerPort: 4002

@@ -12,8 +12,11 @@ spec:
       labels:
         app: event-bus-srv
     spec:
+      imagePullSecrets:
+        - name: regcred  
       containers:
       - name: event-bus-srv
-        image: micro_service/event-bus
+        image: localhost:5005/micro_service/event-bus
+        imagePullPolicy: Always
         ports:
         - containerPort: 4005

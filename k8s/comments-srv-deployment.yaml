@@ -12,8 +12,11 @@ spec:
       labels:
         app: comments-srv
     spec:
+      imagePullSecrets:
+        - name: regcred  
       containers:
       - name: comments-srv
-        image: micro_service/comments
+        image: localhost:5005/micro_service/comments
+        imagePullPolicy: Always
         ports:
         - containerPort: 4001

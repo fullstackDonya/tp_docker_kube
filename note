@@ -58,6 +58,14 @@ docker push localhost:5005/micro_service/event-bus
 Démarrer les services avec Docker Compose :
 docker-compose up -d
 
+Vérifier l'état des services :
+docker-compose logs client
+docker-compose logs posts
+docker-compose logs comments
+docker-compose logs query
+docker-compose logs moderation
+docker-compose logs event-bus
+
 Déploiement sur Kubernetes:
 minikube start
 

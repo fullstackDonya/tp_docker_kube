@@ -59,6 +59,8 @@ Démarrer les services avec Docker Compose :
 docker-compose up -d
 
 Déploiement sur Kubernetes:
+minikube start
+
 
 Appliquer les fichiers de configuration Kubernetes :
 kubectl apply -f k8s/
@@ -78,7 +80,7 @@ kubectl apply -f k8s/query-srv-service.yaml
 Vérifier l'état des services :
 kubectl get pods
 kubectl get svc
-Vérification des services
+
 
 URL des services accessibles :
 Client : http://localhost:3000

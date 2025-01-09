@@ -43,10 +43,6 @@ docker push micro_service/moderation
 docker push micro_service/event-bus
 
 
-
-Connexion à Docker Hub : Assurez-vous d'être connecté à Docker Hub avant de pousser les images :
-docker login
-
 Déployer sur Kubernetes :
 Appliquer les fichiers de configuration :
 kubectl apply -f k8s/
@@ -54,22 +50,4 @@ Vérifier l'état des pods et services :
 
 kubectl get pods
 kubectl get svc
-Configurer l'accès Ingress (Minikube) :
-Si vous utiliser Minikube, lancer le tunnel pour exposer les services :
 
-minikube tunnel
-Notes
-Ce projet utilise l'image Docker node:alpine pour minimiser la taille des conteneurs.
-Si vous rencontrer des erreurs avec Ingress, vérifier les logs du pod NGINX :
-kubectl logs -n ingress-nginx <nom_du_pod>
-
-
-Vérifier l'état des pods :
-
-kubectl get pods
-Vérifier l'état des services :
-
-kubectl get svc
-Vérifier les ingress :
-
-kubectl get ingress

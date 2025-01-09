@@ -147,3 +147,6 @@ docker stop <container_id>
 # kubectl delete pod client-srv-c586d6fd7-jq9px
 
 # kubectl describe pod moderation-srv-bb6c96478-99gvv
+
+kubectl logs client-srv-76445cf66d-br826
+

@@ -1,0 +1,34 @@
+/Projet_fil_rouge
+├── client/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── src/
+├── posts/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── src/
+├── comments/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── src/
+├── query/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── src/
+├── moderation/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── src/
+├── event-bus/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── src/
+├── docker-compose.yml
+└── k8s/
+    ├── client-deployment.yaml
+    ├── posts-deployment.yaml
+    ├── comments-deployment.yaml
+    ├── query-deployment.yaml
+    ├── moderation-deployment.yaml
+    ├── event-bus-deployment.yaml
+    └── ingress.yaml

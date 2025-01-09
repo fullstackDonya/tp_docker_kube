@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  client:
+    image: micro_service/client 
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+  posts:
+    image: micro_service/posts 
+    ports:
+      - "4000:4000"
+    networks:
+      - app-network
+
+  comments:
+    image: micro_service/comments 
+    ports:
+      - "4001:4001"
+    networks:
+      - app-network
+
+  query:
+    image: micro_service/query 
+    ports:
+      - "4002:4002"
+    networks:
+      - app-network
+
+  moderation:
+    image: micro_service/moderation 
+    ports:
+      - "4003:4003"
+    networks:
+      - app-network
+
+  event-bus:
+    image: micro_service/event-bus 
+    ports:
+      - "4005:4005"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

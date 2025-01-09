@@ -1,0 +1,75 @@
+Récapitulatif
+Type	Service	Technologie	Description	Port
+Frontend	Client	React	Interface utilisateur	3000
+Backend	Posts	Node.js	Gestion des posts	4000
+Backend	Comments	Node.js	Gestion des commentaires	4001
+Backend	Query	Node.js	Gestion des requêtes agrégées	4002
+Backend	Moderation	Node.js	Modération des commentaires	4003
+Backend	Event Bus	Node.js	Gestion des événements entre les microservices	4005
+
+
+
+Installation
+
+git clone https://github.com/Mossbaddi/Pojet_fil_rouge.git
+cd Projet_fil_rouge
+
+
+cd client && npm install
+cd ../posts && npm install
+cd ../comments && npm install
+cd ../query && npm install
+cd ../moderation && npm install
+cd ../event-bus && npm install
+
+
+Déploiement
+Construire les images Docker :
+Pour chaque service, utiliser la commande suivante :
+
+docker build -t micro_service/client ./client
+docker build -t micro_service/posts ./posts
+docker build -t micro_service/comments ./comments
+docker build -t micro_service/query ./query
+docker build -t micro_service/moderation ./moderation
+docker build -t micro_service/event-bus ./event-bus
+
+Pousser les images sur Docker Hub :
+docker push micro_service/client
+docker push micro_service/posts
+docker push micro_service/comments
+docker push micro_service/query
+docker push micro_service/moderation
+docker push micro_service/event-bus
+
+
+
+Connexion à Docker Hub : Assurez-vous d'être connecté à Docker Hub avant de pousser les images :
+docker login
+
+Déployer sur Kubernetes :
+Appliquer les fichiers de configuration :
+kubectl apply -f k8s/
+Vérifier l'état des pods et services :
+
+kubectl get pods
+kubectl get svc
+Configurer l'accès Ingress (Minikube) :
+Si vous utiliser Minikube, lancer le tunnel pour exposer les services :
+
+minikube tunnel
+Notes
+Ce projet utilise l'image Docker node:alpine pour minimiser la taille des conteneurs.
+Si vous rencontrer des erreurs avec Ingress, vérifier les logs du pod NGINX :
+kubectl logs -n ingress-nginx <nom_du_pod>
+
+
+Vérifier l'état des pods :
+
+kubectl get pods
+Vérifier l'état des services :
+
+kubectl get svc
+Vérifier les ingress :
+
+kubectl get ingress

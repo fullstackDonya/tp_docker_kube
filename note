@@ -58,6 +58,17 @@ docker push localhost:5005/micro_service/event-bus
 Démarrer les services avec Docker Compose :
 docker-compose up -d
 
+Générer un secret pour JWT :
+openssl rand -base64 32
+
+Créer un fichier .env  ou config.yml à la racine du projet avec les variables suivantes :
+JWT_KEY=secret_key
+
+Démarrer un registre Docker local :
+docker run -d -p 5001:5000 --name registry registry:2
+
+
+
 Vérifier l'état des services :
 docker-compose logs client
 docker-compose logs posts
@@ -114,3 +125,8 @@ Si  déployé sur Kubernetes,application front-end via l'URL suivante :
 http://192.168.49.2:31637
 Ou pour les services spécifiques :
 http://192.168.49.2:31637/posts
+
+
+
+supprimer un container:
+docker stop fdb70fc4b1a5

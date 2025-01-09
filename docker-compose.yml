@@ -1,48 +1,95 @@
-version: '3'
+version: '3.8'
 
 services:
+  # Client Service
   client:
-    image: micro_service/client 
+    image: micro_service/client
     ports:
       - "3000:3000"
     networks:
       - app-network
+    depends_on:
+      - event-bus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
+  # Posts Service
   posts:
-    image: micro_service/posts 
+    image: micro_service/posts
     ports:
       - "4000:4000"
     networks:
       - app-network
+    depends_on:
+      - event-bus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
+  # Comments Service
   comments:
-    image: micro_service/comments 
+    image: micro_service/comments
     ports:
       - "4001:4001"
     networks:
       - app-network
+    depends_on:
+      - event-bus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4001"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
+  # Query Service
   query:
-    image: micro_service/query 
+    image: micro_service/query
     ports:
       - "4002:4002"
     networks:
       - app-network
+    depends_on:
+      - event-bus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4002"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
+  # Moderation Service
   moderation:
-    image: micro_service/moderation 
+    image: micro_service/moderation
     ports:
       - "4003:4003"
     networks:
       - app-network
+    depends_on:
+      - event-bus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4003"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
+  # Event-Bus Service
   event-bus:
-    image: micro_service/event-bus 
+    image: micro_service/event-bus
     ports:
       - "4005:4005"
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4005"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
+  # Docker Registry Service
   registry:
     image: registry:2
     ports:
@@ -56,6 +103,11 @@ services:
       - ./data:/var/lib/registry
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:5000/v2/_catalog"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 networks:
   app-network:

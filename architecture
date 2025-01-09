@@ -1,4 +1,7 @@
 /Microservices
+├── auth/ 
+|  ├── htpasswd/
+├── data/
 ├── client/
 │   ├── Dockerfile
 │   ├── package.json

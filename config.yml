@@ -1,0 +1,15 @@
+version: 0.1
+log:
+  fields:
+    service: registry
+    environment: production
+http:
+  secret: NhgZLgYCP+S13HpUfkNUfND+OkKDzQuaL8cw9iAGKnI= 
+  headers:
+    X-Content-Type-Options: nosniff
+storage:
+  filesystem:
+    rootdirectory: /var/lib/registry
+health:
+  storagedriver:
+    enabled: true

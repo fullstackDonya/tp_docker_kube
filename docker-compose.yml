@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Client Service
   client:
@@ -9,9 +7,9 @@ services:
     networks:
       - app-network
     depends_on:
-      - event-bus
+      - posts  
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "curl", "-f", "http://client:3000"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -24,9 +22,9 @@ services:
     networks:
       - app-network
     depends_on:
-      - event-bus
+      - comments  
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4000"]
+      test: ["CMD", "curl", "-f", "http://posts:4000"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -39,9 +37,9 @@ services:
     networks:
       - app-network
     depends_on:
-      - event-bus
+      - moderation  
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4001"]
+      test: ["CMD", "curl", "-f", "http://comments:4001"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -54,9 +52,9 @@ services:
     networks:
       - app-network
     depends_on:
-      - event-bus
+      - posts   
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4002"]
+      test: ["CMD", "curl", "-f", "http://query:4002"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -69,9 +67,9 @@ services:
     networks:
       - app-network
     depends_on:
-      - event-bus
+      - event-bus  
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4003"]
+      test: ["CMD", "curl", "-f", "http://moderation:4003"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -84,7 +82,7 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4005"]
+      test: ["CMD", "curl", "-f", "http://event-bus:4005"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -94,20 +92,16 @@ services:
     image: registry:2
     ports:
       - "5005:5000"
-    environment:
-      - REGISTRY_AUTH=htpasswd
-      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd
-      - REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm
     volumes:
-      - ./auth:/auth
       - ./data:/var/lib/registry
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:5000/v2/_catalog"]
+      test: ["CMD", "wget", "--spider", "http://registry:5000/v2/_catalog"]
       interval: 30s
       timeout: 10s
       retries: 3
+
 
 networks:
   app-network:

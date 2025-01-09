@@ -16,7 +16,7 @@ spec:
         - name: regcred  
       containers:
       - name: moderation-srv
-        image: localhost:5005/micro_service/moderation
+        image: localhost:5000/micro_service/moderation
         imagePullPolicy: Always
         ports:
         - containerPort: 4003

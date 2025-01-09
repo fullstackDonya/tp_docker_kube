@@ -16,7 +16,7 @@ spec:
         - name: regcred 
       containers:
       - name: posts-clusterip-srv
-        image: localhost:5005/micro_service/posts
+        image: localhost:5000/micro_service/posts
         imagePullPolicy: Always
         ports:
         - containerPort: 4000

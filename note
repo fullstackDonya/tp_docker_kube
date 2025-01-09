@@ -1,6 +1,5 @@
 
 Voici un récapitulatif clair des étapes d'installation, de déploiement, de vérification et des services associés :
-
 Récapitulatif des services
 Type	Service	Technologie	Description	Port
 Frontend	Client	React	Interface utilisateur	3000
@@ -25,8 +24,16 @@ Créer les fichiers d'authentification :
 mkdir auth
 htpasswd -Bc ./auth/htpasswd admin
 htpasswd -Bc ./auth/htpasswd admin2
-Déploiement avec Docker
 
+kubectl create secret docker-registry regcred \
+  --docker-server=localhost:5005 \
+  --docker-username=admin \
+  --docker-password='password*/' \
+  --docker-email=d.benferroudj@ecole-ipssi.net
+
+
+
+Déploiement avec Docker
 Construire les images Docker pour chaque service :
 docker build -t micro_service/client ./client
 docker build -t micro_service/posts ./posts
@@ -34,6 +41,14 @@ docker build -t micro_service/comments ./comments
 docker build -t micro_service/query ./query
 docker build -t micro_service/moderation ./moderation
 docker build -t micro_service/event-bus ./event-bus
+
+ou en utilisant le registre local :
+docker build -t localhost:5005/micro_service/client ./client
+docker build -t localhost:5005/micro_service/posts ./posts
+docker build -t localhost:5005/micro_service/comments ./comments
+docker build -t localhost:5005/micro_service/query ./query
+docker build -t localhost:5005/micro_service/moderation ./moderation
+docker build -t localhost:5005/micro_service/event-bus ./event-bus
 
 Authentification Docker :
 docker login
@@ -47,27 +62,21 @@ docker tag micro_service/query localhost:5005/micro_service/query
 docker tag micro_service/moderation localhost:5005/micro_service/moderation
 docker tag micro_service/event-bus localhost:5005/micro_service/event-bus
 
-Pousser les images vers le registre local :
-docker push localhost:5005/micro_service/client
-docker push localhost:5005/micro_service/posts
-docker push localhost:5005/micro_service/comments
-docker push localhost:5005/micro_service/query
-docker push localhost:5005/micro_service/moderation
-docker push localhost:5005/micro_service/event-bus
 
 Démarrer les services avec Docker Compose :
 docker-compose up -d
+docker-compose up --build -d
 
-Générer un secret pour JWT :
-openssl rand -base64 32
-
-Créer un fichier .env  ou config.yml à la racine du projet avec les variables suivantes :
-JWT_KEY=secret_key
+Pousser les images vers le registre local :
+docker build -t micro_service/client ./client
+docker build -t micro_service/posts ./posts
+docker build -t micro_service/comments ./comments
+docker build -t micro_service/query ./query
+docker build -t micro_service/moderation ./moderation
+docker build -t micro_service/event-bus ./event-bus
 
 Démarrer un registre Docker local :
 docker run -d -p 5001:5000 --name registry registry:2
-
-
 
 Vérifier l'état des services :
 docker-compose logs client
@@ -76,11 +85,6 @@ docker-compose logs comments
 docker-compose logs query
 docker-compose logs moderation
 docker-compose logs event-bus
-
-Déploiement sur Kubernetes:
-minikube start
-minikube tunnel
-
 
 
 Appliquer les fichiers de configuration Kubernetes :
@@ -98,9 +102,12 @@ kubectl apply -f k8s/posts-clusterip-srv-service.yaml
 kubectl apply -f k8s/query-srv-deployment.yaml
 kubectl apply -f k8s/query-srv-service.yaml
 
+
 Vérifier l'état des services :
+kubectl get nodes
 kubectl get pods
 kubectl get svc
+
 
 
 URL des services accessibles :
@@ -111,10 +118,15 @@ Moderation : http://localhost:4003
 Posts : http://localhost:4000
 Query : http://localhost:4002
 Registry : http://localhost:5005
-Accéder à l'application front-end :
 
+Accéder à l'application front-end :
 Accéder à http://localhost:3000 pour voir l'interface utilisateur.
+
 Vérifier les autres services via leur API :
+http://localhost/posts/create
+http://localhost/posts
+http://localhost/posts/<id>/comments
+http://localhost
 
 Posts Service : http://localhost:4000
 Comments Service : http://localhost:4001
@@ -129,6 +141,9 @@ Ou pour les services spécifiques :
 http://192.168.49.2:31637/posts
 
 
-
 supprimer un container:
-docker stop fdb70fc4b1a5
+docker stop <container_id>
+
+# kubectl delete pod client-srv-c586d6fd7-jq9px
+
+# kubectl describe pod moderation-srv-bb6c96478-99gvv

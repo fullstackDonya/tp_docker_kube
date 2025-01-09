@@ -16,7 +16,7 @@ spec:
         - name: regcred  
       containers:
       - name: comments-srv
-        image: localhost:5005/micro_service/comments
+        image: localhost:5000/micro_service/comments
         imagePullPolicy: Always
         ports:
         - containerPort: 4001

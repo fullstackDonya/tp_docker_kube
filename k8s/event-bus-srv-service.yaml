@@ -1,19 +1,12 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
   name: event-bus-srv
 spec:
-  replicas: 1
   selector:
-    matchLabels:
-      app: event-bus-srv
-  template:
-    metadata:
-      labels:
-        app: event-bus-srv
-    spec:
-      containers:
-      - name: event-bus-srv
-        image: micro_service/event-bus
-        ports:
-        - containerPort: 4005
+    app: event-bus-srv
+  ports:
+    - protocol: TCP
+      port: 4005
+      targetPort: 4005
+  type: NodePort

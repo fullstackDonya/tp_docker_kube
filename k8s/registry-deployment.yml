@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      containers:
+        - name: registry
+          image: registry:2
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - name: config
+              mountPath: /etc/docker/registry
+              subPath: config.yml
+            - name: auth
+              mountPath: /auth
+      volumes:
+        - name: config
+          configMap:
+            name: registry-config
+        - name: auth
+          secret:
+            secretName: regcred

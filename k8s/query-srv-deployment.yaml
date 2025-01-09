@@ -16,7 +16,7 @@ spec:
         - name: regcred  
       containers:
       - name: query-srv
-        image: localhost:5005/micro_service/query
+        image: localhost:5000/micro_service/query
         imagePullPolicy: Always
         ports:
         - containerPort: 4002

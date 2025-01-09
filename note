@@ -79,6 +79,8 @@ docker-compose logs event-bus
 
 Déploiement sur Kubernetes:
 minikube start
+minikube tunnel
+
 
 
 Appliquer les fichiers de configuration Kubernetes :

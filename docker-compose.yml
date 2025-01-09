@@ -43,6 +43,20 @@ services:
     networks:
       - app-network
 
+  registry:
+    image: registry:2
+    ports:
+      - "5005:5000"
+    environment:
+      - REGISTRY_AUTH=htpasswd
+      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd
+      - REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm
+    volumes:
+      - ./auth:/auth
+      - ./data:/var/lib/registry
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge

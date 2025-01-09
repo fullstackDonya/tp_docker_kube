@@ -1,4 +1,7 @@
-Récapitulatif
+
+Voici un récapitulatif clair des étapes d'installation, de déploiement, de vérification et des services associés :
+
+Récapitulatif des services
 Type	Service	Technologie	Description	Port
 Frontend	Client	React	Interface utilisateur	3000
 Backend	Posts	Node.js	Gestion des posts	4000
@@ -8,13 +11,9 @@ Backend	Moderation	Node.js	Modération des commentaires	4003
 Backend	Event Bus	Node.js	Gestion des événements entre les microservices	4005
 
 
+cd microservices
 
-Installation
-
-git clone https://github.com/Mossbaddi/Pojet_fil_rouge.git
-cd Projet_fil_rouge
-
-
+Installer les dépendances pour chaque service :
 cd client && npm install
 cd ../posts && npm install
 cd ../comments && npm install
@@ -22,11 +21,13 @@ cd ../query && npm install
 cd ../moderation && npm install
 cd ../event-bus && npm install
 
+Créer les fichiers d'authentification :
+mkdir auth
+htpasswd -Bc ./auth/htpasswd admin
+htpasswd -Bc ./auth/htpasswd admin2
+Déploiement avec Docker
 
-Déploiement
-Construire les images Docker :
-Pour chaque service, utiliser la commande suivante :
-
+Construire les images Docker pour chaque service :
 docker build -t micro_service/client ./client
 docker build -t micro_service/posts ./posts
 docker build -t micro_service/comments ./comments
@@ -34,20 +35,72 @@ docker build -t micro_service/query ./query
 docker build -t micro_service/moderation ./moderation
 docker build -t micro_service/event-bus ./event-bus
 
-Pousser les images sur Docker Hub :
-docker push micro_service/client
-docker push micro_service/posts
-docker push micro_service/comments
-docker push micro_service/query
-docker push micro_service/moderation
-docker push micro_service/event-bus
+Authentification Docker :
+docker login
+docker login localhost:5005
 
+Taguer les images pour le registre local :
+docker tag micro_service/client localhost:5005/micro_service/client
+docker tag micro_service/posts localhost:5005/micro_service/posts
+docker tag micro_service/comments localhost:5005/micro_service/comments
+docker tag micro_service/query localhost:5005/micro_service/query
+docker tag micro_service/moderation localhost:5005/micro_service/moderation
+docker tag micro_service/event-bus localhost:5005/micro_service/event-bus
 
-Déployer sur Kubernetes :
-Appliquer les fichiers de configuration :
+Pousser les images vers le registre local :
+docker push localhost:5005/micro_service/client
+docker push localhost:5005/micro_service/posts
+docker push localhost:5005/micro_service/comments
+docker push localhost:5005/micro_service/query
+docker push localhost:5005/micro_service/moderation
+docker push localhost:5005/micro_service/event-bus
+
+Démarrer les services avec Docker Compose :
+docker-compose up -d
+
+Déploiement sur Kubernetes:
+
+Appliquer les fichiers de configuration Kubernetes :
 kubectl apply -f k8s/
-Vérifier l'état des pods et services :
+kubectl apply -f k8s/client-srv-service.yml
+kubectl apply -f k8s/comments-srv-deployment.yaml
+kubectl apply -f k8s/comments-srv-service.yaml
+kubectl apply -f k8s/event-bus-srv-deployment.yaml
+kubectl apply -f k8s/event-bus-srv-service.yaml
+kubectl apply -f k8s/ingress.yaml
+kubectl apply -f k8s/moderation-srv-deployment.yaml
+kubectl apply -f k8s/moderation-srv-service.yaml
+kubectl apply -f k8s/posts-clusterip-srv-deployment.yaml
+kubectl apply -f k8s/posts-clusterip-srv-service.yaml
+kubectl apply -f k8s/query-srv-deployment.yaml
+kubectl apply -f k8s/query-srv-service.yaml
 
+Vérifier l'état des services :
 kubectl get pods
 kubectl get svc
+Vérification des services
 
+URL des services accessibles :
+Client : http://localhost:3000
+Comments : http://localhost:4001
+Event Bus : http://localhost:4005
+Moderation : http://localhost:4003
+Posts : http://localhost:4000
+Query : http://localhost:4002
+Registry : http://localhost:5005
+Accéder à l'application front-end :
+
+Accéder à http://localhost:3000 pour voir l'interface utilisateur.
+Vérifier les autres services via leur API :
+
+Posts Service : http://localhost:4000
+Comments Service : http://localhost:4001
+Query Service : http://localhost:4002
+Moderation Service : http://localhost:4003
+Event Bus Service : http://localhost:4005
+
+Accéder à l'application front-end (Kubernetes)
+Si  déployé sur Kubernetes,application front-end via l'URL suivante :
+http://192.168.49.2:31637
+Ou pour les services spécifiques :
+http://192.168.49.2:31637/posts

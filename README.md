@@ -106,3 +106,6 @@ Si vous modifiez ces ports, assurez-vous également de mettre à jour les réfé
     kubectl apply -f k8s/
     ```
 # tp_docker_kube
+
+
+curl -X POST http://localhost/posts/create -d '{"title":"Mon Post"}' -H "Content-Type: application/json"

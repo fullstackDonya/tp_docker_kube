@@ -9,4 +9,4 @@ spec:
     - protocol: TCP
       port: 4005
       targetPort: 4005
-  type: NodePort
+  type: ClusterIP

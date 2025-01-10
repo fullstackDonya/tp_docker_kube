@@ -16,4 +16,4 @@ spec:
       - name: client-srv
         image: localhost:5001/micro_service/client
         ports:
-        - containerPort: 3000
+        - containerPort: 80

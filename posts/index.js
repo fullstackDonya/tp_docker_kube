@@ -10,9 +10,6 @@ app.use(cors());
 
 const posts = {};
 
-app.get("/", (req, res) => {
-  res.send("Welcome to the Posts Service!");
-});
 
 app.get("/posts", (req, res) => {
   res.send(posts);

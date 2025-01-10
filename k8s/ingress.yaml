@@ -14,7 +14,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: posts            
+            name: posts-srv
             port:
               number: 4000
       - path: /posts
@@ -24,15 +24,15 @@ spec:
             name: query-srv
             port:
               number: 4002
-      - path: /posts/?(.*)/comments
+      - path: /posts/(?<postId>[^/]+)/comments
         pathType: ImplementationSpecific
         backend:
           service:
             name: comments-srv
             port:
               number: 4001
-      - path: /?(.*)
-        pathType: ImplementationSpecific
+      - path: /
+        pathType: Prefix
         backend:
           service:
             name: client-srv

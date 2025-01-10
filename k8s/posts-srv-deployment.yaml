@@ -12,11 +12,8 @@ spec:
       labels:
         app: posts-srv
     spec:
-      imagePullSecrets:
-        - name: regcred
       containers:
       - name: posts-srv
         image: localhost:5001/micro_service/posts
-        imagePullPolicy: Always
         ports:
         - containerPort: 4000

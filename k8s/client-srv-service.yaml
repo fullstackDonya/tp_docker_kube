@@ -4,7 +4,7 @@ metadata:
   name: client-srv
 spec:
   selector:
-    app: client
+    app: client-srv
   ports:
     - protocol: TCP
       port: 3000

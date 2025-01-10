@@ -27,38 +27,48 @@ Voici un récapitulatif clair des étapes d'installation, de déploiement, de v�
    htpasswd -Bc ./auth/htpasswd admin
    htpasswd -Bc ./auth/htpasswd admin2
 
+
+Mettre à jour le secret existant:
+kubectl delete secret regcred
+kubectl create secret docker-registry regcred \
+  --docker-server=localhost:5001 \
+  --docker-username=admin \
+  --docker-password=password \
+  --docker-email=your-email@example.com
+
 ### Déploiement avec Docker
 
 1. **Construire les images Docker pour chaque service** :
-   docker build -t localhost:5000/micro_service/client ./client
-   docker build -t localhost:5000/micro_service/posts ./posts
-   docker build -t localhost:5000/micro_service/comments ./comments
-   docker build -t localhost:5000/micro_service/query ./query
-   docker build -t localhost:5000/micro_service/moderation ./moderation
-   docker build -t localhost:5000/micro_service/event-bus ./event-bus
+   docker build -t localhost:5001/micro_service/client ./client
+   docker build -t localhost:5001/micro_service/posts ./posts
+   docker build -t localhost:5001/micro_service/comments ./comments
+   docker build -t localhost:5001/micro_service/query ./query
+   docker build -t localhost:5001/micro_service/moderation ./moderation
+   docker build -t localhost:5001/micro_service/event-bus ./event-bus
 
 2. **Authentification Docker** :
    docker login
-   docker login localhost:5000
+   docker login 
 
 3. **Taguer les images pour le registre local** :
-   docker tag micro_service/client localhost:5000/micro_service/client
-   docker tag micro_service/posts localhost:5000/micro_service/posts
-   docker tag micro_service/comments localhost:5000/micro_service/comments
-   docker tag micro_service/query localhost:5000/micro_service/query
-   docker tag micro_service/moderation localhost:5000/micro_service/moderation
-   docker tag micro_service/event-bus localhost:5000/micro_service/event-bus
+   docker tag micro_service/client /micro_service/client
+   docker tag micro_service/posts /micro_service/posts
+   docker tag micro_service/comments /micro_service/comments
+   docker tag micro_service/query /micro_service/query
+   docker tag micro_service/moderation /micro_service/moderation
+   docker tag micro_service/event-bus /micro_service/event-bus
 
 4. **Pousser les images dans le registre local** :
-   docker push localhost:5000/micro_service/client
-   docker push localhost:5000/micro_service/posts
-   docker push localhost:5000/micro_service/comments
-   docker push localhost:5000/micro_service/query
-   docker push localhost:5000/micro_service/moderation
-   docker push localhost:5000/micro_service/event-bus
+   docker push localhost:5001/micro_service/client
+   docker push localhost:5001/micro_service/posts
+   docker push localhost:5001/micro_service/comments
+   docker push localhost:5001/micro_service/query
+   docker push localhost:5001/micro_service/moderation
+   docker push localhost:5001/micro_service/event-bus
 
 5. **Démarrer un registre Docker local** :
    docker run -d -p 5001:5000 --name registry registry:2
+
 
 6. **Démarrer les services avec Docker Compose** :
    docker-compose up --build -d
@@ -88,6 +98,19 @@ Voici un récapitulatif clair des étapes d'installation, de déploiement, de v�
    kubectl apply -f k8s/query-srv-deployment.yaml
    kubectl apply -f k8s/query-srv-service.yaml
 
+
+
+
+kubectl describe svc posts-srv
+kubectl describe svc query-srv
+
+kubectl logs client-srv-55bf8857b-8xk85
+kubectl logs posts-srv-7d58f5d6f7-jlmmb
+kubectl logs comments-srv-7d58f5d6f7-jlmmb
+kubectl logs query-srv-7d58f5d6f7-jlmmb
+kubectl logs moderation-srv-7d58f5d6f7-jlmmb
+
+
 3. **Vérifier l'état des services Kubernetes** :
    kubectl get nodes
    kubectl get pods
@@ -100,7 +123,7 @@ Client : http://localhost:3000
 Comments : http://localhost:4001
 Event Bus : http://localhost:4005
 Moderation : http://localhost:4003
-Posts : http://localhost:4000
+ http://localhost:4000
 Query : http://localhost:4002
 Registry : http://localhost:5005
 
@@ -113,11 +136,7 @@ http://localhost/posts
 http://localhost/posts/<id>/comments
 http://localhost
 
-Posts Service : http://localhost:4000
-Comments Service : http://localhost:4001
-Query Service : http://localhost:4002
-Moderation Service : http://localhost:4003
-Event Bus Service : http://localhost:4005
+
 
 Accéder à l'application front-end (Kubernetes)
 Si  déployé sur Kubernetes,application front-end via l'URL suivante :

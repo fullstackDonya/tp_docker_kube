@@ -135,3 +135,9 @@ Voici un récapitulatif clair des étapes d'installation, de déploiement, de v�
   kubectl describe pod <pod-name> -n ingress-nginx
   kubectl logs <pod-name> -n ingress-nginx
 
+
+
+
+Accéder à l'application front-end (Kubernetes)
+Si  déployé sur Kubernetes,application front-end via l'URL suivante :
+http://localhost:32064/

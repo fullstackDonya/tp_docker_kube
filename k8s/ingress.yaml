@@ -3,7 +3,6 @@ kind: Ingress
 metadata:
   name: microservices-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
@@ -15,7 +14,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: posts-clusterip-srv
+            name: posts            
             port:
               number: 4000
       - path: /posts
@@ -25,14 +24,14 @@ spec:
             name: query-srv
             port:
               number: 4002
-      - path: /posts/.*/comments
+      - path: /posts/?(.*)/comments
         pathType: ImplementationSpecific
         backend:
           service:
             name: comments-srv
             port:
               number: 4001
-      - path: /.*
+      - path: /?(.*)
         pathType: ImplementationSpecific
         backend:
           service:

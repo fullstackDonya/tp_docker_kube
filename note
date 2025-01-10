@@ -1,152 +1,137 @@
+Voici un récapitulatif clair des étapes d'installation, de déploiement, de vérification et des services associés, organisé dans l'ordre :
 
-Voici un récapitulatif clair des étapes d'installation, de déploiement, de vérification et des services associés :
-Récapitulatif des services
-Type	Service	Technologie	Description	Port
-Frontend	Client	React	Interface utilisateur	3000
-Backend	Posts	Node.js	Gestion des posts	4000
-Backend	Comments	Node.js	Gestion des commentaires	4001
-Backend	Query	Node.js	Gestion des requêtes agrégées	4002
-Backend	Moderation	Node.js	Modération des commentaires	4003
-Backend	Event Bus	Node.js	Gestion des événements entre les microservices	4005
+### Récapitulatif des services
 
+| Type     | Service    | Technologie | Description                        | Port |
+|----------|------------|-------------|------------------------------------|------|
+| Frontend | Client     | React       | Interface utilisateur              | 3000 |
+| Backend  | Posts      | Node.js     | Gestion des posts                  | 4000 |
+| Backend  | Comments   | Node.js     | Gestion des commentaires           | 4001 |
+| Backend  | Query      | Node.js     | Gestion des requêtes agrégées      | 4002 |
+| Backend  | Moderation | Node.js     | Modération des commentaires        | 4003 |
+| Backend  | Event Bus  | Node.js     | Gestion des événements entre les microservices | 4005 |
 
-cd microservices
+### Étapes d'installation
 
-Installer les dépendances pour chaque service :
-cd client && npm install
-cd ../posts && npm install
-cd ../comments && npm install
-cd ../query && npm install
-cd ../moderation && npm install
-cd ../event-bus && npm install
+1. **Installer les dépendances pour chaque service** :
+   cd microservices
+   cd client && npm install
+   cd ../posts && npm install
+   cd ../comments && npm install
+   cd ../query && npm install
+   cd ../moderation && npm install
+   cd ../event-bus && npm install
 
-Créer les fichiers d'authentification :
-mkdir auth
-htpasswd -Bc ./auth/htpasswd admin
-htpasswd -Bc ./auth/htpasswd admin2
+2. **Créer les fichiers d'authentification** :
+   mkdir auth
+   htpasswd -Bc ./auth/htpasswd admin
+   htpasswd -Bc ./auth/htpasswd admin2
 
-kubectl create secret docker-registry regcred \
-  --docker-server=localhost:5005 \
-  --docker-username=admin \
-  --docker-password='password*/' \
-  --docker-email=d.benferroudj@ecole-ipssi.net
+### Déploiement avec Docker
 
+1. **Construire les images Docker pour chaque service** :
+   docker build -t localhost:5000/micro_service/client ./client
+   docker build -t localhost:5000/micro_service/posts ./posts
+   docker build -t localhost:5000/micro_service/comments ./comments
+   docker build -t localhost:5000/micro_service/query ./query
+   docker build -t localhost:5000/micro_service/moderation ./moderation
+   docker build -t localhost:5000/micro_service/event-bus ./event-bus
 
+2. **Authentification Docker** :
+   docker login
+   docker login localhost:5000
 
-Déploiement avec Docker
-Construire les images Docker pour chaque service :
-docker build -t micro_service/client ./client
-docker build -t micro_service/posts ./posts
-docker build -t micro_service/comments ./comments
-docker build -t micro_service/query ./query
-docker build -t micro_service/moderation ./moderation
-docker build -t micro_service/event-bus ./event-bus
+3. **Taguer les images pour le registre local** :
+   docker tag micro_service/client localhost:5000/micro_service/client
+   docker tag micro_service/posts localhost:5000/micro_service/posts
+   docker tag micro_service/comments localhost:5000/micro_service/comments
+   docker tag micro_service/query localhost:5000/micro_service/query
+   docker tag micro_service/moderation localhost:5000/micro_service/moderation
+   docker tag micro_service/event-bus localhost:5000/micro_service/event-bus
 
-ou en utilisant le registre local :
-docker build -t localhost:5005/micro_service/client ./client
-docker build -t localhost:5005/micro_service/posts ./posts
-docker build -t localhost:5005/micro_service/comments ./comments
-docker build -t localhost:5005/micro_service/query ./query
-docker build -t localhost:5005/micro_service/moderation ./moderation
-docker build -t localhost:5005/micro_service/event-bus ./event-bus
+4. **Pousser les images dans le registre local** :
+   docker push localhost:5000/micro_service/client
+   docker push localhost:5000/micro_service/posts
+   docker push localhost:5000/micro_service/comments
+   docker push localhost:5000/micro_service/query
+   docker push localhost:5000/micro_service/moderation
+   docker push localhost:5000/micro_service/event-bus
 
-Authentification Docker :
-docker login
-docker login localhost:5005
+5. **Démarrer un registre Docker local** :
+   docker run -d -p 5001:5000 --name registry registry:2
 
-Taguer les images pour le registre local :
-docker tag micro_service/client localhost:5005/micro_service/client
-docker tag micro_service/posts localhost:5005/micro_service/posts
-docker tag micro_service/comments localhost:5005/micro_service/comments
-docker tag micro_service/query localhost:5005/micro_service/query
-docker tag micro_service/moderation localhost:5005/micro_service/moderation
-docker tag micro_service/event-bus localhost:5005/micro_service/event-bus
+6. **Démarrer les services avec Docker Compose** :
+   docker-compose up --build -d
 
+### Vérification de l'état des services
 
-Démarrer les services avec Docker Compose :
-docker-compose up -d
-docker-compose up --build -d
+1. **Vérifier l'état des services Docker Compose** :
+   docker-compose logs client
+   docker-compose logs posts
+   docker-compose logs comments
+   docker-compose logs query
+   docker-compose logs moderation
+   docker-compose logs event-bus
 
-Pousser les images vers le registre local :
-docker build -t micro_service/client ./client
-docker build -t micro_service/posts ./posts
-docker build -t micro_service/comments ./comments
-docker build -t micro_service/query ./query
-docker build -t micro_service/moderation ./moderation
-docker build -t micro_service/event-bus ./event-bus
+2. **Appliquer les fichiers de configuration Kubernetes** :
+   kubectl apply -f k8s/
+   kubectl apply -f k8s/client-srv-service.yml
+   kubectl apply -f k8s/comments-srv-deployment.yaml
+   kubectl apply -f k8s/comments-srv-service.yaml
+   kubectl apply -f k8s/event-bus-srv-deployment.yaml
+   kubectl apply -f k8s/event-bus-srv-service.yaml
+   kubectl apply -f k8s/ingress.yaml
+   kubectl apply -f k8s/moderation-srv-deployment.yaml
+   kubectl apply -f k8s/moderation-srv-service.yaml
+   kubectl apply -f k8s/posts-clusterip-srv-deployment.yaml
+   kubectl apply -f k8s/posts-clusterip-srv-service.yaml
+   kubectl apply -f k8s/query-srv-deployment.yaml
+   kubectl apply -f k8s/query-srv-service.yaml
 
-Démarrer un registre Docker local :
-docker run -d -p 5001:5000 --name registry registry:2
+3. **Vérifier l'état des services Kubernetes** :
+   kubectl get nodes
+   kubectl get pods
+   kubectl get svc
 
-Vérifier l'état des services :
-docker-compose logs client
-docker-compose logs posts
-docker-compose logs comments
-docker-compose logs query
-docker-compose logs moderation
-docker-compose logs event-bus
+# 4. **Utilisez `kubectl port-forward` pour déboguer localement** :
+#    kubectl port-forward svc/posts-clusterip-srv 4000:4000
 
+# 5. **Redémarrez le contrôleur NGINX** :
+#    kubectl rollout restart deployment ingress-nginx-controller -n ingress-nginx
 
-Appliquer les fichiers de configuration Kubernetes :
-kubectl apply -f k8s/
-kubectl apply -f k8s/client-srv-service.yml
-kubectl apply -f k8s/comments-srv-deployment.yaml
-kubectl apply -f k8s/comments-srv-service.yaml
-kubectl apply -f k8s/event-bus-srv-deployment.yaml
-kubectl apply -f k8s/event-bus-srv-service.yaml
-kubectl apply -f k8s/ingress.yaml
-kubectl apply -f k8s/moderation-srv-deployment.yaml
-kubectl apply -f k8s/moderation-srv-service.yaml
-kubectl apply -f k8s/posts-clusterip-srv-deployment.yaml
-kubectl apply -f k8s/posts-clusterip-srv-service.yaml
-kubectl apply -f k8s/query-srv-deployment.yaml
-kubectl apply -f k8s/query-srv-service.yaml
+### URLs accessibles via Ingress
 
+- **Créer un post** : http://localhost/posts/create
+  - Dirigé vers le service `posts-clusterip-srv` sur le port 4000.
+- **Récupérer les posts** : http://localhost/posts
+  - Dirigé vers le service `query-srv` sur le port 4002.
+- **Créer ou récupérer les commentaires associés à un post spécifique** : http://localhost/posts/{postId}/comments
+  - Dirigé vers le service `comments-srv` sur le port 4001.
+- **Accéder à l'interface utilisateur** : http://localhost
+  - Dirigé vers le service `client-srv` sur le port 3000.
 
-Vérifier l'état des services :
-kubectl get nodes
-kubectl get pods
-kubectl get svc
+### Vérification des autres services via leur API
 
+- **Posts Service** : http://localhost:4000/posts/create
+- **Comments Service** : http://localhost:4001/posts/2/comments
+- **Query Service** : http://localhost:4002/posts/2
+- **Moderation Service** : http://localhost:4003
+- **Event Bus Service** : http://localhost:4005
 
+### Commandes utiles
 
-URL des services accessibles :
-Client : http://localhost:3000
-Comments : http://localhost:4001
-Event Bus : http://localhost:4005
-Moderation : http://localhost:4003
-Posts : http://localhost:4000
-Query : http://localhost:4002
-Registry : http://localhost:5005
+- **Supprimer un conteneur** :
+  docker stop <container_id>
 
-Accéder à l'application front-end :
-Accéder à http://localhost:3000 pour voir l'interface utilisateur.
+- **Vérifier les logs des pods Kubernetes** :
+  kubectl logs <pod_name>
 
-Vérifier les autres services via leur API :
-http://localhost/posts/create
-http://localhost/posts
-http://localhost/posts/<id>/comments
-http://localhost
+- **Exécuter des commandes dans les pods Kubernetes** :
+  kubectl exec -it <pod_name> -- nslookup <service_name>
 
-Posts Service : http://localhost:4000
-Comments Service : http://localhost:4001
-Query Service : http://localhost:4002
-Moderation Service : http://localhost:4003
-Event Bus Service : http://localhost:4005
-
-Accéder à l'application front-end (Kubernetes)
-Si  déployé sur Kubernetes,application front-end via l'URL suivante :
-http://192.168.49.2:31637
-Ou pour les services spécifiques :
-http://192.168.49.2:31637/posts
-
-
-supprimer un container:
-docker stop <container_id>
-
-# kubectl delete pod client-srv-c586d6fd7-jq9px
-
-# kubectl describe pod moderation-srv-bb6c96478-99gvv
-
-kubectl logs client-srv-76445cf66d-br826
+- **Vérification du contrôleur Ingress NGINX** :
+  kubectl get pods -n ingress-nginx
+  kubectl get svc -n ingress-nginx
+  kubectl describe pod <pod-name> -n ingress-nginx
+  kubectl logs <pod-name> -n ingress-nginx
 

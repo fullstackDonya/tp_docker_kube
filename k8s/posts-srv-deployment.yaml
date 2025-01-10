@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: posts-clusterip-srv
+  name: posts-srv
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: posts-clusterip-srv
+      app: posts-srv
   template:
     metadata:
       labels:
-        app: posts-clusterip-srv
+        app: posts-srv
     spec:
       imagePullSecrets:
-        - name: regcred 
+        - name: regcred
       containers:
-      - name: posts-clusterip-srv
-        image: localhost:5000/micro_service/posts
+      - name: posts-srv
+        image: localhost:5001/micro_service/posts
         imagePullPolicy: Always
         ports:
         - containerPort: 4000

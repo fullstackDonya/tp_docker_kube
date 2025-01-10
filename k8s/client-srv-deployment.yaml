@@ -16,7 +16,7 @@ spec:
         - name: regcred  
       containers:
       - name: client-srv
-        image: localhost:5000/micro_service/client
+        image: localhost:5001/micro_service/client
         imagePullPolicy: Always
         ports:
         - containerPort: 3000

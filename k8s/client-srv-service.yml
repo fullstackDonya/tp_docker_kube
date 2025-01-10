@@ -4,9 +4,9 @@ metadata:
   name: client-srv
 spec:
   selector:
-    app: client-srv
+    app: client
   ports:
     - protocol: TCP
       port: 3000
-      targetPort: 80
+      targetPort: 3000
   type: NodePort

@@ -1,60 +1,73 @@
+version: '3.8'
+
 services:
   client:
-    image: micro_service/client
+    image: localhost:5001/micro_service/client
     ports:
       - "3000:3000"
     networks:
       - app-network
+    depends_on:
+      - client
 
   posts:
-    image: micro_service/posts
+    image: localhost:5001/micro_service/posts
     ports:
       - "4000:4000"
     networks:
       - app-network
+    depends_on:
+      - posts
 
   comments:
-    image: micro_service/comments
+    image: localhost:5001/micro_service/comments
     ports:
       - "4001:4001"
     networks:
       - app-network
+    depends_on:
+      - comments
 
   query:
-    image: micro_service/query
+    image: localhost:5001/micro_service/query
     ports:
       - "4002:4002"
     networks:
       - app-network
+    depends_on:
+      - query
 
   moderation:
-    image: micro_service/moderation
+    image: localhost:5001/micro_service/moderation
     ports:
       - "4003:4003"
     networks:
       - app-network
+    depends_on:
+      - moderation
 
   event-bus:
-    image: micro_service/event-bus
+    image: localhost:5001/micro_service/event-bus
     ports:
       - "4005:4005"
     networks:
       - app-network
+    depends_on:
+      - event-bus
 
   registry:
-    image: registry:2  
+    image: registry:2
     container_name: registry_app_react
     ports:
       - "5001:5000"
     # volumes:
       # - registry_data:/var/lib/registry
-    #   - ./auth/htpasswd:/auth/htpasswd
+      # - ./auth/htpasswd:/auth/htpasswd
     # environment:
     #   REGISTRY_AUTH: "htpasswd"
     #   REGISTRY_AUTH_HTPASSWD_REALM: "Registry Realm"
     #   REGISTRY_AUTH_HTPASSWD_PATH: "/auth/htpasswd"
     restart: always
-
 
 networks:
   app-network:
